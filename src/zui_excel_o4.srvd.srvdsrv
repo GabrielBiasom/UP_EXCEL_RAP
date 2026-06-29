@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition upload excel'
+define service ZUI_EXCEL_O4 {
+  expose ZC_USER_GB as XLHead;
+  expose ZC_DATA_GB as XLData;
+}

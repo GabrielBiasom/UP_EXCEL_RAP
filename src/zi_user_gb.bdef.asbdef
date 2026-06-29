@@ -1,0 +1,103 @@
+managed;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_USER_GB alias XLHead
+implementation in class zbp_i_user_gb unique
+persistent table ztg_excel_user
+lock master
+total etag LastChangedAt
+draft table ztg_excel_userd
+early numbering
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) EndUser, FileId;
+  association _XLData { create; with draft; }
+
+  field ( readonly ) TemplContent, templmimetype, templfilename;
+
+  // Logica para ler o arquivo excel dentro da entity ZI_DATA_GB
+  action uploadExcelData result [1] $self;
+
+  // Troca o status durante a criação do registro
+  determination FillFileStatus on modify { field EndUser; }
+
+  // Troca o Status quando o arquivo é selecionado
+  determination FillSelectedStatus on modify { field Attachment; }
+
+  //  Validações
+  //  validation ValidateField on save { field Attachment; }
+
+  side effects
+  {
+    field Attachment affects field FileStatus;
+    action uploadExcelData affects $self, messages;
+  }
+
+  //Draft actions
+  draft action Activate optimized;
+  draft action Edit;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ztg_excel_user
+    {
+      EndUser            = end_user;
+      FileId             = file_id;
+      FileStatus         = file_status;
+      Attachment         = attachment;
+      Mimetype           = mimetype;
+      Filename           = filename;
+      LocalCreatedBy     = local_created_by;
+      LocalCreatedAt     = local_created_at;
+      LocalLastChangedBy = local_last_changed_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+      templcontent       = templ_content;
+      templmimetype      = templ_mimetype;
+      templfilename      = templ_filename;
+      criticality        = criticality;
+    }
+}
+
+define behavior for ZI_DATA_GB alias XLData
+implementation in class zbp_i_data_gb unique
+persistent table ztg_excel_data
+draft table ztg_excel_datad
+lock dependent by _XLUser
+authorization dependent by _XLUser
+{
+  update;
+  delete;
+  field ( readonly ) EndUser, FileId,
+  PoNumber, PoItem, GrQuantity,
+  UnitOfMeasure, SiteId, LineNumber;
+
+  field ( readonly, numbering : managed ) LineId;
+
+  // Editar campo durante draft
+  field ( mandatory : create ) HeaderText;
+
+  association _XLUser { with draft; }
+
+  action processData result [1] $self;
+
+  mapping for ztg_excel_data
+    {
+      enduser       = end_user;
+      fileid        = file_id;
+      lineid        = line_id;
+      linenumber    = line_no;
+      ponumber      = po_number;
+      poitem        = po_item;
+      grquantity    = gr_quantity;
+      unitofmeasure = unit_of_measure;
+      siteid        = site_id;
+      headertext    = header_text;
+    }
+}

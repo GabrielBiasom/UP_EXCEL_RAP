@@ -1,0 +1,94 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Arquivo',
+  typeNamePlural: 'Arquivos',
+  title: { type: #STANDARD, value: 'FileId' }
+}
+annotate entity ZC_USER_GB with
+{
+  @UI.facet: [
+  {
+    id: 'idEndUser',
+    purpose: #HEADER,
+    position: 10,
+    type: #DATAPOINT_REFERENCE,
+    targetQualifier: 'tqEndUser'
+  },
+  {
+    id: 'idChgAt',
+    purpose: #HEADER,
+    position: 20,
+    type: #DATAPOINT_REFERENCE,
+    targetQualifier: 'tqChgAt'
+  },
+  {
+    id: 'idStatus',
+    purpose: #HEADER,
+    position: 30,
+    type: #DATAPOINT_REFERENCE,
+    targetQualifier: 'tqStatus'
+  },
+  {
+    id: 'idFile',
+    purpose: #STANDARD,
+    position: 50,
+    label: 'Arquivo',
+    type: #IDENTIFICATION_REFERENCE
+  },
+  {
+    id: 'idData',
+    purpose: #STANDARD,
+    position: 60,
+    label: 'Dados do Excel',
+    type: #LINEITEM_REFERENCE,
+    targetElement: '_XLData'
+  }
+  ]
+
+  @UI.dataPoint: { qualifier: 'tqEndUser', title: 'Usuário:' }
+  @UI.identification: [{ type: #FOR_ACTION, label: 'Upload Dados', dataAction: 'uploadExcelData' }]
+  EndUser;
+
+  @UI.lineItem: [{ position: 20, label: 'Status', criticality: 'Criticality' }]
+  @UI.dataPoint: { qualifier: 'tqStatus', title: 'Status do arquivo:' }
+  FileStatus;
+
+  @UI.dataPoint: {
+      qualifier: 'tqChgAt',
+      title: 'Data da última alteração:'
+  }
+  @UI.textArrangement: #TEXT_ONLY
+  LastChangedAt;
+
+  @UI.identification: [{ position: 30, label: 'Selecione o arquivo para Upload:' }]
+  Attachment;
+
+  @UI.hidden: true
+  Criticality;
+
+  @UI.identification: [{ position: 40, label: 'Arquivo de template' }]
+  TemplContent;
+
+  @UI.hidden: true
+  TemplFilename;
+
+  @UI.hidden: true
+  TemplMimetype;
+
+  @UI.hidden: true
+  Mimetype;
+
+  @UI.lineItem: [{ position: 30, label: 'Nome do Arquivo' }]
+  Filename;
+
+  @UI.lineItem: [{ position: 50, label: 'Criado por' }]
+  LocalCreatedBy;
+
+  @UI.lineItem: [{ position: 40, label: 'Criado em' }]
+  LocalCreatedAt;
+
+  /* Associations */
+  @UI.hidden: true
+  _XLData;
+
+}
