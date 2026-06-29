@@ -1,7 +1,7 @@
 # Carga arquivo Excel em RAP, 100% Fiori elements.
 
 - É possivel realizar um CRUD de um arquivo Excel, extraindo os dados e trabalhando os dados como preferir;
-- Trabalhamos com tabelas draft, Actions para funções, e Determinations para ID, Status dinâmico e template do arquivo excel.
+- Trabalhamos com tabelas draft, Actions para funções e Determinations para os campos: ID ( early numbering ), Status ( para torna-lo dinâmico ) e template ( fazendo possivel download do arquivo modelo excel ).
 
 ## Lista de registros:
 <img width="933" height="252" alt="Image" src="https://github.com/user-attachments/assets/d5255b5a-92b2-42f2-a7dd-1f44bdcb532c" />
